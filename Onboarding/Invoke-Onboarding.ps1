@@ -36,6 +36,12 @@ function Test-InputRow {
     return $null
 }
 
+function Get-RowValue {
+    param($Row, [string]$Name)
+    if ($Row.PSObject.Properties.Name -contains $Name) { return $Row.$Name }
+    return $null
+}
+
 Import-Module ActiveDirectory -ErrorAction Stop
 
 if (-not (Test-Path $LogPath)) { New-Item -ItemType Directory -Path $LogPath -Force | Out-Null }
@@ -55,6 +61,7 @@ foreach ($row in $rows) {
     $estado = 'Omitido'
     $detalle = ''
     $usuario = $row.Usuario
+    $departamento = Get-RowValue -Row $row -Name 'Departamento'
 
     try {
         $errorFila = Test-InputRow -Row $row
@@ -70,8 +77,9 @@ foreach ($row in $rows) {
             throw "OU no encontrada: $($row.OU)"
         }
 
-        $passwordPlano = if ($row.Password) {
-            $row.Password
+        $passFromCsv = Get-RowValue -Row $row -Name 'Password'
+        $passwordPlano = if ($passFromCsv) {
+            $passFromCsv
         } else {
             $p = New-RandomPassword -Length $PasswordLength
             $newPasswords.Add([pscustomobject]@{ Usuario = $usuario; Password = $p })
@@ -94,8 +102,9 @@ foreach ($row in $rows) {
                 -ChangePasswordAtLogon $true
 
             $gruposFallidos = @()
-            if ($row.Grupos) {
-                foreach ($g in ($row.Grupos -split ';' | ForEach-Object { $_.Trim() } | Where-Object { $_ })) {
+            $gruposRaw = Get-RowValue -Row $row -Name 'Grupos'
+            if ($gruposRaw) {
+                foreach ($g in ($gruposRaw -split ';' | ForEach-Object { $_.Trim() } | Where-Object { $_ })) {
                     try { Add-ADGroupMember -Identity $g -Members $usuario -ErrorAction Stop }
                     catch { $gruposFallidos += $g }
                 }
@@ -126,7 +135,7 @@ foreach ($row in $rows) {
             Nombre       = "$($row.Nombre) $($row.Apellido)"
             Usuario      = $usuario
             UPN          = "$usuario@$DominioUPN"
-            Departamento = $row.Departamento
+            Departamento = $departamento
             Estado       = $estado
             Detalle      = $detalle
             Fecha        = (Get-Date).ToString('s')
@@ -142,11 +151,11 @@ if ($newPasswords.Count -gt 0) {
     Write-Host "Contrasenas temporales en: $passFile" -ForegroundColor Yellow
 }
 
-$creados  = ($results | Where-Object Estado -eq 'Creado').Count
-$avisos   = ($results | Where-Object Estado -eq 'Creado con avisos').Count
-$existent = ($results | Where-Object Estado -eq 'Ya existia').Count
-$errores  = ($results | Where-Object Estado -eq 'Error').Count
-$omitidos = ($results | Where-Object Estado -like 'Omitido*').Count
+$creados  = @($results | Where-Object Estado -eq 'Creado').Count
+$avisos   = @($results | Where-Object Estado -eq 'Creado con avisos').Count
+$existent = @($results | Where-Object Estado -eq 'Ya existia').Count
+$errores  = @($results | Where-Object Estado -eq 'Error').Count
+$omitidos = @($results | Where-Object Estado -like 'Omitido*').Count
 
 Write-Host ""
 Write-Host "===== RESUMEN =====" -ForegroundColor Cyan
