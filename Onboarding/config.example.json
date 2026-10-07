@@ -1,9 +1,9 @@
 {
   "DominioUPN": "empresa.com",
   "OUUsuarios": "OU=Usuarios,DC=empresa,DC=com",
-  "ServidorADSync": "SRV-SYNC01",
+  "ServidorADSync": "",
   "UsageLocation": "MX",
-  "RutaLogs": "./logs",
+  "RutaLogs": "logs",
   "GruposBase": ["GG_Todos_Empleados", "GG_VPN_Usuarios"],
   "GruposPorDepartamento": {
     "TI": ["GG_TI", "GG_Admin_Remoto"],

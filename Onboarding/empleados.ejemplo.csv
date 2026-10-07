@@ -1,6 +1,5 @@
-Nombre,Apellido,Departamento,Puesto,Licencia,FechaIngreso
-María,González,Finanzas,Analista Contable,E3,2026-10-12
-Juan,Pérez,Ventas,Ejecutivo Comercial,BusinessPremium,2026-10-12
-Juan,Pérez,Soporte,Técnico Nivel 1,F3,2026-10-19
-Ángela,Muñoz,TI,Administradora de Sistemas,E3,2026-10-19
-Carlos,Ramírez,RRHH,Coordinador de Talento,BusinessPremium,2026-10-26
+Nombre,Apellido,Usuario,OU,Grupos
+Juan,Perez,jperez,"OU=Usuarios,DC=empresa,DC=com",GG_TI;GG_Todos_Empleados
+Maria,Lopez,mlopez,"OU=Usuarios,DC=empresa,DC=com",GG_Ventas;GG_Todos_Empleados
+Carlos,Ramirez,cramirez,"OU=Usuarios,DC=empresa,DC=com",GG_Finanzas;GG_Todos_Empleados
+Ana,Martinez,amartinez,"OU=Usuarios,DC=empresa,DC=com",GG_RRHH;GG_Todos_Empleados
