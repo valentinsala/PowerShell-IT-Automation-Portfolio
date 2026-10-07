@@ -1,0 +1,20 @@
+{
+  "DominioUPN": "empresa.com",
+  "OUUsuarios": "OU=Usuarios,DC=empresa,DC=com",
+  "ServidorADSync": "SRV-SYNC01",
+  "UsageLocation": "MX",
+  "RutaLogs": "./logs",
+  "GruposBase": ["GG_Todos_Empleados", "GG_VPN_Usuarios"],
+  "GruposPorDepartamento": {
+    "TI": ["GG_TI", "GG_Admin_Remoto"],
+    "Ventas": ["GG_Ventas", "GG_CRM"],
+    "Finanzas": ["GG_Finanzas"],
+    "RRHH": ["GG_RRHH"],
+    "Soporte": ["GG_Soporte", "GG_Helpdesk"]
+  },
+  "Licencias": {
+    "E3": "00000000-0000-0000-0000-000000000001",
+    "BusinessPremium": "00000000-0000-0000-0000-000000000002",
+    "F3": "00000000-0000-0000-0000-000000000003"
+  }
+}
